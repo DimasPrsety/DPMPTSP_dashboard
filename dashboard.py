@@ -47,7 +47,9 @@ with st.spinner('Updating Report .... ') :
 m1, m2, m3  = st.columns((1,1,1))
 m1.write('')
 m2.metric(label = "Total Izin yang diajukan", value = total_izin)
-m3.metric(label = f"**In Average**<br> <sub> izin per {level.capitalize()}</sub>", value = '', delta = average_izin)
+m3.write(f"**In Average**")
+m3.write(f"<sub>izin per {level.capitalize()}</sub>")
+m3.metric(label = "", value = '', delta = average_izin)
 m1.write('')
 
 c3, c4, c5 = st.columns(3)
