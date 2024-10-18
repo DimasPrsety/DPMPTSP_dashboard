@@ -31,7 +31,7 @@ with st.spinner('Updating Report .... ') :
 
     # Metrics setting and rendering
 
-    sp_izin_df = pd.read_excel('ct_izin.xlsx',sheet_name = 'sheet1')
+    sp_izin_df = pd.read_excel('ct_izin.xlsx',sheet_name = 'service_point')
     sp = st.selectbox('Choose Service Point', sp_izin_df, help = 'Filter report to show only one service point of penanaman modal')
 
 
