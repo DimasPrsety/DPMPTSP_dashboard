@@ -34,11 +34,22 @@ with st.spinner('Updating Report .... ') :
     sp_izin_df = pd.read_excel('ct_izin.xlsx',sheet_name = 'service_point')
     sp = st.selectbox('Choose Service Point', sp_izin_df, help = 'Filter report to show only one service point of penanaman modal')
 
+    # label logic : determine if kecamatan, kelurahan or kota
+
+    if sp.startswith('Kantor Camat') : 
+        level = 'kecamatan' 
+    elif sp.startswith('Kantor Lurah') : 
+        level = 'kelurahan'
+    else :
+        level = 'kota / kabupaten'
+
 
 # Define layout using column in streamlit
-c1, c2 = st.columns([3,1])
-c1.metric(label = "Total Izin yang diajukan", value = total_izin)
-c2.metric(label ="Average izin per kecamatan", value = average_izin)
+m1, m2, m3  = st.columns((1,1,1))
+m1.write('')
+m2.metric(label = "Total Izin yang diajukan", value = total_izin)
+m3.metric(label = f"**In Average**<br> <sub> izin per {level.capitalize()}</sub>", delta = average_izin)
+m1.write('')
 
 c3, c4, c5 = st.columns(3)
 c3.metric(label = "Selesai diproses", value = selesai_diproses, delta=f"{round(selesai_perc, 1)}%")
