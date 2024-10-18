@@ -13,11 +13,29 @@ selesai_perc = selesai_diproses / total_izin * 100
 ditolak_perc = ditolak_dibatalkan / total_izin * 100
 masih_perc = masih_diproses / total_izin * 100
 
+
 # Set page config
 st.set_page_config(page_title = "DPMPTSP Dashboard", layout="wide")
 
+
+# Header
+t1, t2 = st.columns((0.07,1))
+
+t1.image('images/dpmptsp_logo2.jpeg', width = 100)
+t2.title('Dashboard Tipologi DPMPTSP Jakarta')
+t2.markdown("**tel :** 1500164 / (021)1500164 **| website :** https://pelayanan.jakarta.go.id/ **")
+
+
+with st.spinner('Updating Report .... ') : 
+
+    # Metrics setting and rendering
+
+    sp_izin_df = pd.read_excel('ct_izin.xlsx',sheet_name = 'sheet1')
+    sp = st.selectbox('Choose Service Point', sp_izin_df, help = 'Filter report to show only one service point of penanaman modal')
+
+
 # Define layout using column in streamlit
-c1, c2 = st.columns(2)
+c1, c2 = st.columns([3,1])
 c1.metric(label = "Total Izin yang diajukan", value = total_izin)
 c2.metric(label ="Average izin per kecamatan", value = average_izin)
 
