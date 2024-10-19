@@ -99,7 +99,7 @@ with st.spinner('Updating Report .... ') :
         else :
             lvl_cluster = 'tidak ditemukan cluster ini'
 
-        g1.markdown(f"<h2 style='color: blue;'>## Cluster {cluster_value}")
+        g1.markdown(f"<h2 style='color: blue;'>## Cluster {cluster_value}</h2>")
         g1.markdown(f"### cluster ini {lvl_cluster}")
         g2.plotly_chart(fig1, use_container_width = True)
 
