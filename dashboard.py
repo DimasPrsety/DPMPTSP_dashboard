@@ -2,10 +2,7 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 
-# percentage
-selesai_perc = selesai_diproses / total_izin * 100
-ditolak_perc = ditolak_dibatalkan / total_izin * 100
-masih_perc = masih_diproses / total_izin * 100
+
 
 
 # Set page config
@@ -43,6 +40,11 @@ with st.spinner('Updating Report .... ') :
     ditolak_dibatalkan = tot_status_df[tot_status_df['service_point']==sp]['total_ditolak_dibatalkan']
     masih_diproses = tot_status_df[tot_status_df['service_point']==sp]['total_proses']
 
+    # percentage
+    selesai_perc = selesai_diproses / total_izin * 100
+    ditolak_perc = ditolak_dibatalkan / total_izin * 100
+    masih_perc = masih_diproses / total_izin * 100
+    
     # total_izin = 597
     # average_izin = 712.1
     # selesai_diproses = 433
