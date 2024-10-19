@@ -2,13 +2,6 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 
-# Data
-total_izin = 597
-average_izin = 712.1
-selesai_diproses = 433
-ditolak_dibatalkan = 163
-masih_diproses = 1
-
 # percentage
 selesai_perc = selesai_diproses / total_izin * 100
 ditolak_perc = ditolak_dibatalkan / total_izin * 100
@@ -35,7 +28,6 @@ with st.spinner('Updating Report .... ') :
     sp = st.selectbox('Choose Service Point', sp_izin_df, help = 'Filter report to show only one service point of penanaman modal')
 
     # label logic : determine if kecamatan, kelurahan or kota
-
     if sp.startswith('Kantor Camat') : 
         level = 'kecamatan' 
     elif sp.startswith('Kantor Lurah') : 
@@ -43,27 +35,48 @@ with st.spinner('Updating Report .... ') :
     else :
         level = 'kota / kabupaten'
 
-# Define layout using column in streamlit
-m1, m2, m3  = st.columns((1,1,1))
-m1.write('')
-m2.metric(label = "Total Izin yang diajukan", value = total_izin)
-m3.write(f"**In Average**")
-m3.write(f"<sub>izin per {level.capitalize()}</sub>")
-m3.metric(label = "", value = '', delta = average_izin)
-m1.write('')
+    # Data total izin berdasarkan status
+    tot_status_df = pd.read_excel('ct_izin.xlsx', sheet_name = 'tot_status')
+    total_izin = tot_status_df[tot_status_df['service_point']==sp]['total_diajukan']
+    average_izin = tot_status_df[tot_status_df['service_point']==sp]['average_status']
+    selesai_diproses = tot_status_df[tot_status_df['service_point']==sp]['total_selesai']
+    ditolak_dibatalkan = tot_status_df[tot_status_df['service_point']==sp]['total_ditolak_dibatalkan']
+    masih_diproses = tot_status_df[tot_status_df['service_point']==sp]['total_proses']
 
-c3, c4, c5 = st.columns(3)
-c3.metric(label = "Selesai diproses", value = selesai_diproses, delta=f"{round(selesai_perc, 1)}%")
-c4.metric(label = "Masih diproses", value = masih_diproses, delta=f"{round(masih_perc, 1)}%")
-c5.metric(label = "Ditolak & dibatalkan", value = ditolak_dibatalkan, delta=f"{round(ditolak_perc, 1)}%")
+    # total_izin = 597
+    # average_izin = 712.1
+    # selesai_diproses = 433
+    # ditolak_dibatalkan = 163
+    # masih_diproses = 1
 
 
-fig = go.Figure(go.Bar(
-    x = ['Selesai','Masih Diproses', 'Ditolak & Dibatalkan']
-    , y = [selesai_diproses, masih_diproses, ditolak_dibatalkan]
-    , marker_color = ['green', 'orange', 'red']
-))
+    # Define layout using column in streamlit
+    m1, m2, m3  = st.columns((1,1,1))
+    m1.write('')
+    m2.metric(label = "Total Izin yang diajukan", value = total_izin)
+    m3.write(f"**In Average**")
+    m3.write(f"{average_izin} jumlah izin per {level.capitalize()}")
+    m1.write('')
+    m1.write('')
 
-fig.update_layout(title_text = "Distribution of Process Status", title_x = 0.5)
+    # Layouting status lainnya yang belum masuk
+    c3, c4, c5 = st.columns(3)
+    c3.metric(label = "Selesai diproses", value = selesai_diproses, delta=f"{round(selesai_perc, 1)}%")
+    c4.metric(label = "Masih diproses", value = masih_diproses, delta=f"{round(masih_perc, 1)}%")
+    c5.metric(label = "Ditolak & dibatalkan", value = ditolak_dibatalkan, delta=f"{round(ditolak_perc, 1)}%")
 
-st.plotly_chart(fig, use_container_width = True)
+    st.markdown("<hr style = 'border: 1px solid gray;'>", unsafe_allow_html = True)
+    st.markdown("---")
+
+    # Layout untuk grafik piechart dan klasifikasi izin
+    g1,g2 = st.columns((1,1))
+
+    pcdf = pd.read_excel('ct_izin.xlsx', sheet_name = 'tot_bidang2')
+    pcdf = pcdf[pcdf['service_point']==sp]
+
+    fig1 = go.Figure(data = [go.Pie(pcdf, labels ='Bidang_recode', value = 'total_diajukan', hole = .3)])
+    fig1.update_traces(marker_color = '#264653')
+    fig1.update_layout(title_text = "Kategori Bidang yang Dominan", title_x = 0, margin = dict(l=0, r=10, b=10))
+
+    g1.write('')
+    g2.plotly_chart(fig1, use_container_width = True)
