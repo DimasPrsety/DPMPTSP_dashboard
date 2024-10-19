@@ -75,8 +75,7 @@ with st.spinner('Updating Report .... ') :
     pcdf = pd.read_excel('ct_izin.xlsx', sheet_name = 'tot_bidang2')
     pcdf = pcdf[pcdf['service_point']==sp]
 
-    fig1 = go.Figure(data = [go.Pie(labels =pcdf['bidang_recode'], values = pcdf['total_diajukan'], hole = .3)])
-    fig1.update_traces(marker_color = '#264653')
+    fig1 = go.Figure(data = [go.Pie(labels =pcdf['bidang_recode'], values = pcdf['total_diajukan'], hole = .3, marker = dict(colors = '#264653'))])
     fig1.update_layout(title_text = "Kategori Bidang yang Dominan", title_x = 0, margin = dict(l=0, r=10, b=10))
 
     g1.write('')
