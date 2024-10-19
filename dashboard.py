@@ -85,22 +85,22 @@ with st.spinner('Updating Report .... ') :
         cluster_value = cidf['Cluster'].iloc[0]
 
         if cluster_value == 0 : 
-            lvl_cluster = 'Dominasi di Bidang **Pelayanan umum dan penataan ruang**, Bidang **Kesehatan** dan Bidang **Pelayanan Administrasi**'
+            lvl_cluster = 'didominasi di Bidang **Pelayanan umum dan penataan ruang**, Bidang **Kesehatan** dan Bidang **Pelayanan Administrasi**'
         elif cluster_value == 1 :  
-            lvl_cluster = 'Dominasi hanya di Bidang **Pelayanan Administrasi**'
+            lvl_cluster = 'didominasi hanya di Bidang **Pelayanan Administrasi**'
         elif cluster_value == 3 :  
-            lvl_cluster = 'Dominasi utama di Bidang **Kesehatan**'
+            lvl_cluster = 'didominasi utama di Bidang **Kesehatan**'
         elif cluster_value == 4 :  
-            lvl_cluster = 'Bidang kesehatan lebih mendominasi dibandingkan cluster3'
+            lvl_cluster = 'menonjol pada bidang kesehatan yang lebih mendominasi dibandingkan cluster3'
         elif cluster_value == 6 :  
-            lvl_cluster = 'Dominasi utama di Bidang **Pelayanan Administrasi** dan bidang Kesbangpol'
+            lvl_cluster = 'didominasi utama di Bidang **Pelayanan Administrasi** dan bidang Kesbangpol'
         elif cluster_value == 7 :  
-            lvl_cluster = 'Bidang lain cukup menyebar rata seperti Kesbangpol, Kesehatan, Lingkungan Hidup'
+            lvl_cluster = 'cukup menyebar rata seperti Kesbangpol, Kesehatan, Lingkungan Hidup'
         else :
             lvl_cluster = 'tidak ditemukan cluster ini'
 
-        g1.markdown(f"## Cluster {cluster_value}")
-        g1.markdown(f"### cluster ini menonjol pada {lvl_cluster}")
+        g1.markdown(f"<h2 style='color: blue;'>## Cluster {cluster_value}")
+        g1.markdown(f"### cluster ini {lvl_cluster}")
         g2.plotly_chart(fig1, use_container_width = True)
 
     st.markdown("---")
