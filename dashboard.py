@@ -84,23 +84,23 @@ with st.spinner('Updating Report .... ') :
     if not cidf.empty : 
         cluster_value = cidf['Cluster'].iloc[0]
 
-    if cidf['Cluster'] == 0 : 
-        lvl_cluster = 'Dominasi di Bidang **Pelayanan umum dan penataan ruang**, Bidang **Kesehatan** dan Bidang **Pelayanan Administrasi**'
-    elif cidf['Cluster'] == 1 :  
-        lvl_cluster = 'Dominasi hanya di Bidang **Pelayanan Administrasi**'
-    elif cidf['Cluster'] == 3 :  
-        lvl_cluster = 'Dominasi utama di Bidang **Kesehatan**'
-    elif cidf['Cluster'] == 4 :  
-        lvl_cluster = 'Bidang kesehatan lebih mendominasi dibandingkan cluster3'
-    elif cidf['Cluster'] == 6 :  
-        lvl_cluster = 'Dominasi utama di Bidang **Pelayanan Administrasi** dan bidang Kesbangpol'
-    elif cidf['Cluster'] == 7 :  
-        lvl_cluster = 'Bidang lain cukup menyebar rata seperti Kesbangpol, Kesehatan, Lingkungan Hidup'
-    else :
-        lvl_cluster = 'tidak ditemukan cluster ini'
+        if cidf['Cluster'] == 0 : 
+            lvl_cluster = 'Dominasi di Bidang **Pelayanan umum dan penataan ruang**, Bidang **Kesehatan** dan Bidang **Pelayanan Administrasi**'
+        elif cidf['Cluster'] == 1 :  
+            lvl_cluster = 'Dominasi hanya di Bidang **Pelayanan Administrasi**'
+        elif cidf['Cluster'] == 3 :  
+            lvl_cluster = 'Dominasi utama di Bidang **Kesehatan**'
+        elif cidf['Cluster'] == 4 :  
+            lvl_cluster = 'Bidang kesehatan lebih mendominasi dibandingkan cluster3'
+        elif cidf['Cluster'] == 6 :  
+            lvl_cluster = 'Dominasi utama di Bidang **Pelayanan Administrasi** dan bidang Kesbangpol'
+        elif cidf['Cluster'] == 7 :  
+            lvl_cluster = 'Bidang lain cukup menyebar rata seperti Kesbangpol, Kesehatan, Lingkungan Hidup'
+        else :
+            lvl_cluster = 'tidak ditemukan cluster ini'
 
-    g1.markdown(f"## Cluster {cluster_value}")
-    g1.markdown(f"### cluster ini menonjol pada {lvl_cluster}")
-    g2.plotly_chart(fig1, use_container_width = True)
+        g1.markdown(f"## Cluster {cluster_value}")
+        g1.markdown(f"### cluster ini menonjol pada {lvl_cluster}")
+        g2.plotly_chart(fig1, use_container_width = True)
 
     st.markdown("---")
