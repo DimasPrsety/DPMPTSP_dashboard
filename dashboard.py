@@ -78,5 +78,24 @@ with st.spinner('Updating Report .... ') :
     fig1 = go.Figure(data = [go.Pie(labels =pcdf['bidang_recode'], values = pcdf['total_diajukan'], hole = .3, marker = dict(colors = ['#264653']))])
     fig1.update_layout(title_text = "Kategori Bidang yang Dominan", title_x = 0, margin = dict(l=0, r=10, b=10))
 
-    g1.write('')
+    if pcdf['Cluster'] == 0 : 
+        lvl_cluster = 'Dominasi di Bidang **Pelayanan umum dan penataan ruang**, Bidang **Kesehatan** dan Bidang **Pelayanan Administrasi**'
+    elif pcdf['Cluster'] == 1 :  
+        lvl_cluster = 'Dominasi hanya di Bidang **Pelayanan Administrasi**'
+    elif pcdf['Cluster'] == 3 :  
+        lvl_cluster = 'Dominasi utama di Bidang **Kesehatan**'
+    elif pcdf['Cluster'] == 4 :  
+        lvl_cluster = 'Bidang kesehatan lebih mendominasi dibandingkan cluster3'
+    elif pcdf['Cluster'] == 6 :  
+        lvl_cluster = 'Dominasi utama di Bidang **Pelayanan Administrasi** dan bidang Kesbangpol'
+    elif pcdf['Cluster'] == 7 :  
+        lvl_cluster = 'Bidang lain cukup menyebar rata seperti Kesbangpol, Kesehatan, Lingkungan Hidup'
+    else :
+        lvl_cluster = 'tidak ditemukan cluster ini'
+
+
+    g1.markdown(f"## {pcdf['Cluster']}")
+    g1.markdown(f"### cluster ini menonjol pada {lvl_cluster}")
     g2.plotly_chart(fig1, use_container_width = True)
+
+    st.markdown("---")
