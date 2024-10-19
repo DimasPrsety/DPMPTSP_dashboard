@@ -84,17 +84,17 @@ with st.spinner('Updating Report .... ') :
     if not cidf.empty : 
         cluster_value = cidf['Cluster'].iloc[0]
 
-        if cidf['Cluster'] == 0 : 
+        if cluster_value == 0 : 
             lvl_cluster = 'Dominasi di Bidang **Pelayanan umum dan penataan ruang**, Bidang **Kesehatan** dan Bidang **Pelayanan Administrasi**'
-        elif cidf['Cluster'] == 1 :  
+        elif cluster_value == 1 :  
             lvl_cluster = 'Dominasi hanya di Bidang **Pelayanan Administrasi**'
-        elif cidf['Cluster'] == 3 :  
+        elif cluster_value == 3 :  
             lvl_cluster = 'Dominasi utama di Bidang **Kesehatan**'
-        elif cidf['Cluster'] == 4 :  
+        elif cluster_value == 4 :  
             lvl_cluster = 'Bidang kesehatan lebih mendominasi dibandingkan cluster3'
-        elif cidf['Cluster'] == 6 :  
+        elif cluster_value == 6 :  
             lvl_cluster = 'Dominasi utama di Bidang **Pelayanan Administrasi** dan bidang Kesbangpol'
-        elif cidf['Cluster'] == 7 :  
+        elif cluster_value == 7 :  
             lvl_cluster = 'Bidang lain cukup menyebar rata seperti Kesbangpol, Kesehatan, Lingkungan Hidup'
         else :
             lvl_cluster = 'tidak ditemukan cluster ini'
