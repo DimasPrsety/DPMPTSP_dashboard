@@ -93,8 +93,10 @@ with st.spinner('Updating Report .... ') :
     else :
         lvl_cluster = 'tidak ditemukan cluster ini'
 
+    cidf = pd.read_excel('ct_izin.xlsx', sheet_name = 'cluster')
+    cidf = cidf[cidf['service_point']==sp]
 
-    g1.markdown(f"## {pcdf['Cluster']}")
+    g1.markdown(f"## {cidf['Cluster']}")
     g1.markdown(f"### cluster ini menonjol pada {lvl_cluster}")
     g2.plotly_chart(fig1, use_container_width = True)
 
