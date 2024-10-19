@@ -44,7 +44,7 @@ with st.spinner('Updating Report .... ') :
     selesai_perc = selesai_diproses / total_izin * 100
     ditolak_perc = ditolak_dibatalkan / total_izin * 100
     masih_perc = masih_diproses / total_izin * 100
-    
+
     # total_izin = 597
     # average_izin = 712.1
     # selesai_diproses = 433
@@ -57,17 +57,16 @@ with st.spinner('Updating Report .... ') :
     m1.write('')
     m2.metric(label = "Total Izin yang diajukan", value = total_izin)
     m3.write(f"**In Average**")
-    m3.write(f"{average_izin} jumlah izin per {level.capitalize()}")
+    m3.write(f"{average_izin.iloc[0]} jumlah izin per {level.capitalize()}")
     m1.write('')
     m1.write('')
 
     # Layouting status lainnya yang belum masuk
     c3, c4, c5 = st.columns(3)
-    c3.metric(label = "Selesai diproses", value = selesai_diproses, delta=f"{round(selesai_perc, 1)}%")
-    c4.metric(label = "Masih diproses", value = masih_diproses, delta=f"{round(masih_perc, 1)}%")
-    c5.metric(label = "Ditolak & dibatalkan", value = ditolak_dibatalkan, delta=f"{round(ditolak_perc, 1)}%")
+    c3.metric(label = "Selesai diproses", value = selesai_diproses, delta=f"{round(selesai_perc.iloc[0], 1)}%")
+    c4.metric(label = "Masih diproses", value = masih_diproses, delta=f"{round(masih_perc.iloc[0], 1)}%")
+    c5.metric(label = "Ditolak & dibatalkan", value = ditolak_dibatalkan, delta=f"{round(ditolak_perc.iloc[0], 1)}%")
 
-    st.markdown("<hr style = 'border: 1px solid gray;'>", unsafe_allow_html = True)
     st.markdown("---")
 
     # Layout untuk grafik piechart dan klasifikasi izin
@@ -76,7 +75,7 @@ with st.spinner('Updating Report .... ') :
     pcdf = pd.read_excel('ct_izin.xlsx', sheet_name = 'tot_bidang2')
     pcdf = pcdf[pcdf['service_point']==sp]
 
-    fig1 = go.Figure(data = [go.Pie(pcdf, labels ='Bidang_recode', value = 'total_diajukan', hole = .3)])
+    fig1 = go.Figure(data = [go.Pie(pcdf, labels ='bidang_recode', value = 'total_diajukan', hole = .3)])
     fig1.update_traces(marker_color = '#264653')
     fig1.update_layout(title_text = "Kategori Bidang yang Dominan", title_x = 0, margin = dict(l=0, r=10, b=10))
 
