@@ -106,19 +106,19 @@ with st.spinner('Updating Report .... ') :
 
     # terkait g3 utk pemohon, g4 utk yang dibawah g5 utk yang terakhir
     # pdf merupakan status pemohon apakah perushaaan atau individu
-    g3 = st.columns(1)
+    g3 = st.columns(1)[0]
     pdf = pd.read_excel('ct_izin.xlsx', sheet_name = 'pemohon')
     pdf = pdf[pdf['service_point']==sp]
 
     fig2 = go.Figure()
     fig2.add_trace(go.Bar(y = pdf['service_point'], x=pdf['perorangan'], orientation = 'h'))
-    fig2.add_trace(go.Bar(y = pdf['service_point'], x=pdf['perorangan'], orientation = 'h'))
+    fig2.add_trace(go.Bar(y = pdf['service_point'], x=pdf['perusahaan'], orientation = 'h'))
 
     fig2.update_layout(
         barmode = 'stack'
         , title ='Tipe Pemohon berdasarkan izin : Perorangan vs Perusahaan'
     )
-    
+
     g3.plotly_chart(fig2, use_container_width = True)
 
     g4 = st.columns(1)
