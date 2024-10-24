@@ -132,9 +132,9 @@ with st.spinner('Updating Report .... ') :
         barmode = 'stack'
         , title = {
             'text'      : 'Tipe Pemohon berdasarkan izin : Perorangan vs Perusahaan'
-            'x'         : 0.5
-            'xanchor'   : 'center'
-            'yanchor'   : 'top'
+            , 'x'         : 0.5
+            , 'xanchor'   : 'center'
+            , 'yanchor'   : 'top'
         }
         , height = 300
         , xaxis = {
