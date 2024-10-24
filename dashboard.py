@@ -118,6 +118,8 @@ with st.spinner('Updating Report .... ') :
         barmode = 'stack'
         , title ='Tipe Pemohon berdasarkan izin : Perorangan vs Perusahaan'
     )
+    
+    g3.plotly_chart(fig2, use_container_width = True)
 
     g4 = st.columns(1)
 
