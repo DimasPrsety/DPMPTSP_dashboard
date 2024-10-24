@@ -4,7 +4,6 @@ import plotly.graph_objects as go
 
 
 
-
 # Set page config
 st.set_page_config(page_title = "DPMPTSP Dashboard", layout="wide")
 
@@ -99,8 +98,30 @@ with st.spinner('Updating Report .... ') :
         else :
             lvl_cluster = 'tidak ditemukan cluster ini'
 
-        g1.markdown(f"<h2 style='color: blue;'>## Cluster {cluster_value}</h2>", unsafe_allow_html = True)
-        g1.markdown(f"### cluster ini {lvl_cluster}")
+        g1.markdown(f"## <h2 style='color: blue;'> Cluster {cluster_value}</h2>", unsafe_allow_html = True)
+        g1.markdown(f"### Cluster ini {lvl_cluster}")
         g2.plotly_chart(fig1, use_container_width = True)
 
     st.markdown("---")
+
+    # terkait g3 utk pemohon, g4 utk yang dibawah g5 utk yang terakhir
+    # pdf merupakan status pemohon apakah perushaaan atau individu
+    g3 = st.columns(1)
+    pdf = pd.read_excel('ct_izin.xlsx', sheet_name = 'pemohon')
+    pdf = pdf[pdf['service_point']==sp]
+
+    fig2 = go.Figure()
+    fig2.add_trace(go.Bar(y = pdf['service_point'], x=pdf['perorangan'], orientation = 'h'))
+    fig2.add_trace(go.Bar(y = pdf['service_point'], x=pdf['perorangan'], orientation = 'h'))
+
+    fig2.update_layout(
+        barmode = 'stack'
+        , title ='Tipe Pemohon berdasarkan izin : Perorangan vs Perusahaan'
+    )
+
+    g4 = st.columns(1)
+
+    g5 = st.columns(1)
+
+    
+
