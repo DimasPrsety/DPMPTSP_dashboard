@@ -111,12 +111,35 @@ with st.spinner('Updating Report .... ') :
     pdf = pdf[pdf['service_point']==sp]
 
     fig2 = go.Figure()
-    fig2.add_trace(go.Bar(y = pdf['service_point'], x=pdf['perorangan'], orientation = 'h'))
-    fig2.add_trace(go.Bar(y = pdf['service_point'], x=pdf['perusahaan'], orientation = 'h'))
+    fig2.add_trace(go.Bar(
+        y = pdf['service_point']
+        , x=pdf['perorangan']
+        , name = 'Perorangan'
+        , orientation = 'h'
+        , text = pdf['perorangan']
+        , textposition = 'auto'
+    ))
+    fig2.add_trace(go.Bar(
+        y = pdf['service_point']
+        , x=pdf['perusahaan']
+        , name = 'Perusahaan'
+        , orientation = 'h'
+        , text = pdf['perusahaan']
+        , textposition = 'auto'
+    ))
 
     fig2.update_layout(
         barmode = 'stack'
-        , title ='Tipe Pemohon berdasarkan izin : Perorangan vs Perusahaan'
+        , title = {
+            'text'      : 'Tipe Pemohon berdasarkan izin : Perorangan vs Perusahaan'
+            'x'         : 0.5
+            'xanchor'   : 'center'
+            'yanchor'   : 'top'
+        }
+        , height = 300
+        , xaxis = {
+            'showticklabels' : False
+        }
     )
 
     g3.plotly_chart(fig2, use_container_width = True)
