@@ -143,13 +143,34 @@ with st.spinner('Updating Report .... ') :
     )
 
     g3.plotly_chart(fig2, use_container_width = True)
-    
+    #======================================================================================================================================================================
     # Kalau g4 ini terkait berdasarkan derivative wilayahnya
+    #======================================================================================================================================================================
     g4 = st.columns(1)
 
-    
+    dw1df = pd.read_excel('ct_izin.xlsx', sheet_name = 'lvlderivative')
+    dw1df = dw1df[dw1df['service_point']==sp]
 
+    dw1df = dw1df.div(dw1df.sum(axis=1), axis=0) * 100  # Convert to percentage
+    # pivot_df = pivot_df.reset_index()
+
+    fig3 = go.Figure()
+    for bidang_category in dw1df.columns[1:]:  # Skip the first column 'district'
+        fig.add_trace(go.Bar(
+            x=dw1df[bidang_category],
+            y=dw1df['2levelup'],
+            name=bidang_category
+            , orientation = 'h'
+        ))
+
+    fig.update_layout(
+        barmode='stack',
+        title=f"Izin yang Selesai by Naon and Bidang in",
+        xaxis=dict(title='District'),
+        yaxis=dict(title='Izin yang Selesai')
+    )
     
+    g4.plotly_chart(fig3, use_container_width = True)
 
     g5 = st.columns(1)
 
