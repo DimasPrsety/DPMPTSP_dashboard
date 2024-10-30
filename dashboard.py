@@ -170,7 +170,7 @@ with st.spinner('Updating Report .... ') :
         , yaxis=dict(title='Izin yang Selesai')
     )
     
-    g4.plotly_chart(fig3, use_container_width = True)
+    g4[0].plotly_chart(fig3, use_container_width = True)
 
     g5 = st.columns(1)
 
