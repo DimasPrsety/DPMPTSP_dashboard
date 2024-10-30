@@ -156,18 +156,18 @@ with st.spinner('Updating Report .... ') :
 
     fig3 = go.Figure()
     for bidang_category in dw1df.columns[1:]:  # Skip the first column 'district'
-        fig.add_trace(go.Bar(
-            x=dw1df[bidang_category],
-            y=dw1df['2levelup'],
-            name=bidang_category
+        fig3.add_trace(go.Bar(
+            x=dw1df[bidang_category]
+            , y=dw1df['2levelup']
+            , name=bidang_category
             , orientation = 'h'
         ))
 
-    fig.update_layout(
-        barmode='stack',
-        title=f"Izin yang Selesai by Naon and Bidang in",
-        xaxis=dict(title='District'),
-        yaxis=dict(title='Izin yang Selesai')
+    fig3.update_layout(
+        barmode='stack'
+        , title=f"Izin yang Selesai by Naon and Bidang in"
+        , xaxis=dict(title='District')
+        , yaxis=dict(title='Izin yang Selesai')
     )
     
     g4.plotly_chart(fig3, use_container_width = True)
