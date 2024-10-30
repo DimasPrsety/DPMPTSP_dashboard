@@ -131,7 +131,7 @@ with st.spinner('Updating Report .... ') :
     fig2.update_layout(
         barmode = 'stack'
         , title = {
-            'text'      : 'Tipe Pemohon berdasarkan izin : Perorangan vs Perusahaan'
+            'text'        : 'Tipe Pemohon berdasarkan Jumlah izin : Perorangan vs Perusahaan'
             , 'x'         : 0.5
             , 'xanchor'   : 'center'
             , 'yanchor'   : 'top'
@@ -143,8 +143,13 @@ with st.spinner('Updating Report .... ') :
     )
 
     g3.plotly_chart(fig2, use_container_width = True)
-
+    
+    # Kalau g4 ini terkait berdasarkan derivative wilayahnya
     g4 = st.columns(1)
+
+    
+
+    
 
     g5 = st.columns(1)
 
