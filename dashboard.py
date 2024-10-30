@@ -151,7 +151,7 @@ with st.spinner('Updating Report .... ') :
     dw1df = pd.read_excel('ct_izin.xlsx', sheet_name = 'lvlderivative')
     dw1df = dw1df[dw1df['service_point']==sp]
 
-    dw1df = dw1df.div(dw1df.sum(axis=1), axis=0) * 100  # Convert to percentage
+    dw1df.iloc[:, 5:] = dw1df.iloc[:, 5:].div(dw1df.iloc[:, 5:].sum(axis=1), axis=0) * 100  # Convert to percentage
     # pivot_df = pivot_df.reset_index()
 
     fig3 = go.Figure()
