@@ -143,36 +143,171 @@ with st.spinner('Updating Report .... ') :
     )
 
     g3.plotly_chart(fig2, use_container_width = True)
+
     #======================================================================================================================================================================
     # Kalau g4 ini terkait berdasarkan derivative wilayahnya
     #======================================================================================================================================================================
-    g4 = st.columns(1)
+    st.markdown("---")
+    st.markdown("## Distribusi Bidang Perizinan")
 
-    dw1df = pd.read_excel('ct_izin.xlsx', sheet_name = 'lvlderivative')
-    dw1df = dw1df[dw1df['service_point']==sp]
+    # Baca data wilayah
+    wdf = pd.read_excel('ct_izin.xlsx', sheet_name='wilayah_derivative')
+    selected_row = wdf[wdf['service_point'] == sp].iloc[0]
+    level_wilayah = selected_row['Level_wilayah']
 
-    dw1df.iloc[:, 5:] = dw1df.iloc[:, 5:].div(dw1df.iloc[:, 5:].sum(axis=1), axis=0) * 100  # Convert to percentage
-    # pivot_df = pivot_df.reset_index()
+    # Color palette
+    colors = [
+        '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+        '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
+        '#aec7e8', '#ffbb78', '#98df8a', '#ff9896', '#c5b0d5',
+        '#c49c94', '#f7b6d2', '#c7c7c7', '#dbdb8d', '#9edae5'
+    ]
 
-    fig3 = go.Figure()
-    for bidang_category in dw1df.columns[1:]:  # Skip the first column 'district'
-        fig3.add_trace(go.Bar(
-            x=dw1df[bidang_category]
-            , y=dw1df['2levelup']
-            , name=bidang_category
-            , orientation = 'h'
-        ))
+    # Daftar kolom bidang
+    bidang_cols = ['Esdm', 'Kehutanan', 'Kelautan Dan Perikanan', 'Kepemudaan dan Keolahragaan',
+                'Kesatuan Bangsa Dan Politik Dalam Negeri', 'Kesehatan', 
+                'Ketenteraman, ketertiban Umum dan Pelindungan Masyarakat',
+                'Lingkungan Hidup', 'Pariwisata', 'Pekerjaan Umum Dan Penataan Ruang',
+                'Pelayanan Administrasi', 'Pendidikan', 'Perdagangan', 'Perhubungan',
+                'Pertanahan Yang Menjadi Kewenangan Daerah', 'Pertanian',
+                'Perumahan Rakyat Dan Kawasan Permukiman', 'Sosial', 'Tenaga Kerja']
 
-    fig3.update_layout(
-        barmode='stack'
-        , title=f"Izin yang Selesai by Naon and Bidang in"
-        , xaxis=dict(title='District')
-        , yaxis=dict(title='Izin yang Selesai')
-    )
-    
-    g4[0].plotly_chart(fig3, use_container_width = True)
+    if level_wilayah == 'Kel':
+        st.info("Data sama dengan Pie Chart diatas")
 
-    g5 = st.columns(1)
+    elif level_wilayah == 'Dinas':
+        # Data untuk level dinas
+        dinas = selected_row['dinas']
+        dinas_data = wdf[wdf['dinas'] == dinas]
+        
+        # Agregasi data per kota
+        agg_data = dinas_data.groupby('kota')[bidang_cols].sum().reset_index()
+        agg_data['total'] = agg_data[bidang_cols].sum(axis=1)
+        
+        fig = go.Figure()
+        color_idx = 0
+        for bidang in bidang_cols:
+            if agg_data[bidang].sum() > 0:
+                fig.add_trace(go.Bar(
+                    y=agg_data['kota'],
+                    x=agg_data[bidang] / agg_data['total'] * 100,
+                    name=bidang,
+                    orientation='h',
+                    text=[f'{x:.1f}% ({int(y)})' for x, y in zip(agg_data[bidang] / agg_data['total'] * 100, agg_data[bidang])],
+                    textposition='inside',
+                    marker_color=colors[color_idx % len(colors)],
+                    legendgroup=bidang,
+                    showlegend=True
+                ))
+                color_idx += 1
+        title_text = f'Distribusi Bidang Perizinan untuk Dinas {dinas}'
 
-    
+    elif level_wilayah == 'Kota':
+        # Data untuk level kota
+        kota = selected_row['kota']
+        kota_data = wdf[wdf['kota'] == kota]
+        agg_data = kota_data.groupby('kecamatan')[bidang_cols].sum().reset_index()
+        agg_data['total'] = agg_data[bidang_cols].sum(axis=1)
+        
+        fig = go.Figure()
+        color_idx = 0
+        for bidang in bidang_cols:
+            if agg_data[bidang].sum() > 0:
+                fig.add_trace(go.Bar(
+                    y=agg_data['kecamatan'],
+                    x=agg_data[bidang] / agg_data['total'] * 100,
+                    name=bidang,
+                    orientation='h',
+                    text=[f'{x:.1f}% ({int(y)})' for x, y in zip(agg_data[bidang] / agg_data['total'] * 100, agg_data[bidang])],
+                    textposition='inside',
+                    marker_color=colors[color_idx % len(colors)],
+                    legendgroup=bidang,
+                    showlegend=True
+                ))
+                color_idx += 1
+        title_text = f'Distribusi Bidang Perizinan di Kota {kota}'
+
+    elif level_wilayah == 'Kec':
+        # Data untuk level kecamatan
+        kecamatan = selected_row['kecamatan']
+        kec_data = wdf[wdf['kecamatan'] == kecamatan]
+        kec_data['total'] = kec_data[bidang_cols].sum(axis=1)
+        
+        fig = go.Figure()
+        color_idx = 0
+        for bidang in bidang_cols:
+            if kec_data[bidang].sum() > 0:
+                # Tangani nilai NaN dengan mengubah ke 0
+                values = kec_data[bidang].fillna(0)
+                percentages = (values / kec_data['total'] * 100).fillna(0)
+                
+                fig.add_trace(go.Bar(
+                    y=kec_data['service_point'],
+                    x=percentages,
+                    name=bidang,
+                    orientation='h',
+                    text=[f'{x:.1f}% ({int(y)})' if not pd.isna(y) else '0% (0)' 
+                        for x, y in zip(percentages, values)],
+                    textposition='inside',
+                    marker_color=colors[color_idx % len(colors)],
+                    legendgroup=bidang,
+                    showlegend=True
+                ))
+                color_idx += 1
+        title_text = f'Distribusi Bidang Perizinan di Kecamatan {kecamatan}'
+
+    if level_wilayah != 'Kel':
+        # Pengaturan layout grafik
+        fig.update_layout(
+            barmode='stack',
+            title=title_text,
+            xaxis_title='Persentase (%)',
+            height=800,  # Tinggi grafik diperbesar
+            bargap=0.2,  # Jarak antar bar
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.5,
+                xanchor="center",
+                x=0.5,
+                bgcolor='rgba(255, 255, 255, 0.8)',
+                bordercolor='rgba(0, 0, 0, 0.3)',
+                borderwidth=1,
+                itemsizing='constant',
+                itemwidth=40
+            ),
+            margin=dict(b=200),  # Margin bawah untuk legend
+            uniformtext=dict(mode='hide', minsize=8)
+        )
+
+        # Tambahkan button untuk toggle legend
+        fig.update_layout(
+            updatemenus=[
+                dict(
+                    type="buttons",
+                    direction="left",
+                    buttons=list([
+                        dict(
+                            args=[{"visible": [True] * len(fig.data)}],
+                            label="Show All",
+                            method="restyle"
+                        ),
+                        dict(
+                            args=[{"visible": [False] * len(fig.data)}],
+                            label="Hide All",
+                            method="restyle"
+                        )
+                    ]),
+                    pad={"r": 10, "t": 10},
+                    showactive=True,
+                    x=0.11,
+                    xanchor="left",
+                    y=1.1,
+                    yanchor="top"
+                ),
+            ]
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
 
