@@ -20,8 +20,8 @@ with st.spinner('Updating Report .... ') :
 
     # Metrics setting and rendering
 
-    sp_izin_df = pd.read_excel('ct_izin.xlsx',sheet_name = 'service_point')
-    sp = st.selectbox('Choose Service Point', sp_izin_df, help = 'Filter report to show only one service point of penanaman modal')
+    ct_izin_df = pd.read_excel('ct_izin.xlsx',sheet_name = 'service_point')
+    sp = st.selectbox('Choose Service Point', ct_izin_df, help = 'Filter report to show only one service point of penanaman modal')
 
     # label logic : determine if kecamatan, kelurahan or kota
     if sp.startswith('Kantor Camat') : 
@@ -380,7 +380,7 @@ with st.spinner('Updating Report .... ') :
     with st.expander("## Detail Izin berdasarkan Bidang", expanded=False):
         try:
             # Read the data
-            izin_detail_df = pd.read_excel('sp_izin.xlsx', sheet_name='nama_izin')
+            izin_detail_df = pd.read_excel('ct_izin.xlsx', sheet_name='nama_izin')
             
             # Filter data based on selected service point
             filtered_izin = izin_detail_df[izin_detail_df['service_point'] == sp].copy()
