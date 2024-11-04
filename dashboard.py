@@ -311,3 +311,130 @@ with st.spinner('Updating Report .... ') :
 
         st.plotly_chart(fig, use_container_width=True)
 
+
+    #======================================================================================================================================================================
+    # Kalau g5 ini terkait berdasarkan distribusi berdasarkan sub wilayah
+    #======================================================================================================================================================================
+
+    with st.expander("## Distribusi Total Perizinan di Sub-wilayah", expanded=False):
+        # Initialize sub_data as None
+        sub_data = None
+
+        if level_wilayah == 'Kota':
+            # For Kota level, show Kelurahan data
+            kecamatan = wdf[wdf['kota'] == selected_row['kota']]['kecamatan'].unique()
+            sub_data = wdf[wdf['kecamatan'].isin(kecamatan)].copy()
+            group_col = 'kelurahan'
+            title_text = f'Distribusi Total Perizinan per Kelurahan di {selected_row["kota"]}'
+        elif level_wilayah == 'Dinas':
+            # For DPMPTSP DKI JAKARTA, show aggregated Kecamatan data
+            sub_data = wdf.copy()
+            group_col = 'kecamatan'
+            title_text = 'Distribusi Total Perizinan per Kecamatan di DKI Jakarta'
+
+        if sub_data is not None:
+            # Calculate total for all bidang_cols
+            sub_data['total_izin'] = sub_data[bidang_cols].sum(axis=1)
+            
+            # Aggregate data by sub-region
+            agg_sub_data = sub_data.groupby(group_col)['total_izin'].sum().reset_index()
+            
+            # Sort by total
+            agg_sub_data = agg_sub_data.sort_values('total_izin', ascending=False)
+            
+            # Rename columns for display
+            agg_sub_data.columns = ['Wilayah', 'Total Perizinan']
+            
+            # Format the Total Perizinan column with thousands separator
+            agg_sub_data['Total Perizinan'] = agg_sub_data['Total Perizinan'].apply(lambda x: f"{int(x):,}")
+            
+            # Display title
+            st.markdown(f"### {title_text}")
+            
+            # Display table with styling
+            st.dataframe(
+                agg_sub_data,
+                height=400,
+                hide_index=True,
+                use_container_width=True,
+                column_config={
+                    "Wilayah": st.column_config.TextColumn(
+                        "Wilayah",
+                        width="medium",
+                    ),
+                    "Total Perizinan": st.column_config.TextColumn(
+                        "Total Perizinan",
+                        width="medium",
+                    )
+                },
+                column_order=["Wilayah", "Total Perizinan"]
+            )
+
+            # ... existing code ...
+
+    # Add new section for detailed permits
+    # Add new section for detailed permits
+    # ... existing code ...
+
+    # Add new section for detailed permits
+    with st.expander("## Detail Izin berdasarkan Bidang", expanded=False):
+        try:
+            # Read the data
+            izin_detail_df = pd.read_excel('sp_izin.xlsx', sheet_name='nama_izin')
+            
+            # Filter data based on selected service point
+            filtered_izin = izin_detail_df[izin_detail_df['service_point'] == sp].copy()
+            
+            if not filtered_izin.empty:
+                # Ensure columns exist and handle missing data
+                required_columns = ['service_point', 'bidang_recode', 'nama_izin', 'total_selesai']
+                if all(col in filtered_izin.columns for col in required_columns):
+                    # Group by bidang and nama_izin
+                    grouped_izin = (filtered_izin
+                        .groupby(['bidang_recode', 'nama_izin'])
+                        .agg({'total_selesai': 'sum'})
+                        .reset_index()
+                        .sort_values('total_selesai', ascending=False)
+                    )
+                    
+                    # Display the table
+                    st.markdown(f"### Detail Izin di {sp}")
+                    st.dataframe(
+                        grouped_izin,
+                        height=400,
+                        hide_index=True,
+                        use_container_width=True,
+                        column_config={
+                            "bidang_recode": st.column_config.TextColumn(
+                                "Bidang",
+                                width="medium",
+                            ),
+                            "nama_izin": st.column_config.TextColumn(
+                                "Nama Izin",
+                                width="large",
+                            ),
+                            "total_selesai": st.column_config.NumberColumn(
+                                "Total Izin Selesai",
+                                width="small",
+                                format="%d"
+                            )
+                        }
+                    )
+                    
+                    # Display summary statistics
+                    st.markdown("### Ringkasan")
+                    col1, col2, col3 = st.columns(3)
+                    
+                    with col1:
+                        st.metric("Total Jenis Izin", len(grouped_izin['nama_izin'].unique()))
+                    with col2:
+                        st.metric("Total Bidang", len(grouped_izin['bidang_recode'].unique()))
+                    with col3:
+                        st.metric("Total Izin Selesai", int(grouped_izin['total_selesai'].sum()))
+                else:
+                    st.error("Format data tidak sesuai. Mohon periksa kolom yang diperlukan.")
+            else:
+                st.info("Tidak ada data izin untuk service point ini")
+                
+        except Exception as e:
+            st.error(f"Terjadi kesalahan: {str(e)}")
