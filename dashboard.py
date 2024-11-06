@@ -370,12 +370,6 @@ with st.spinner('Updating Report .... ') :
                 column_order=["Wilayah", "Total Perizinan"]
             )
 
-            # ... existing code ...
-
-    # Add new section for detailed permits
-    # Add new section for detailed permits
-    # ... existing code ...
-
     # Add new section for detailed permits
     with st.expander("## Detail Izin berdasarkan Bidang", expanded=False):
         try:
