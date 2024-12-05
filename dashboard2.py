@@ -11,9 +11,9 @@ st.set_page_config(page_title = "DPMPTSP Dashboard", layout="wide")
 # Header
 t1, t2 = st.columns((0.07,1))
 
-t1.image('dpmptsp_logo2.jpeg', width = 100)
+t1.image('images/dpmptsp_logo2.jpeg', width = 100)
 t2.title('Dashboard Tipologi DPMPTSP Jakarta')
-t2.markdown("**tel :** 1500164 / (021)1500164 **| website :** https://pelayanan.jakarta.go.id/ **")
+t2.markdown("**tel :** 1500164 / (021)1500164 **| website :** https://pelayanan.jakarta.go.id/")
 
 with st.spinner('Updating Report .... ') : 
 
