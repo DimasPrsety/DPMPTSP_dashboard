@@ -423,7 +423,7 @@ with st.spinner('Updating Report .... ') :
         ## Tab 2 Bagian Investasi             
         # ------------------------------------------------------------------------------------------------------------------
 
-    with tab1:
+    with tab2:
         # Data total izin berdasarkan status
         tot_status_df = pd.read_excel('ct_izin.xlsx', sheet_name='tot_status')
         filtered_data = tot_status_df[tot_status_df['service_point'] == sp]
