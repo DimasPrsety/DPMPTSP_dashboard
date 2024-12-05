@@ -3,7 +3,6 @@ import streamlit as st
 import plotly.graph_objects as go
 
 
-
 # Set page config
 st.set_page_config(page_title = "DPMPTSP Dashboard", layout="wide")
 
@@ -464,8 +463,6 @@ with st.spinner('Updating Report .... ') :
             peng2.metric(label = "Pengawasan Resiko Menengah Rendah", value = f"{pengawasan_mr:,}", delta =f"{round(pengawasan_mr_perc, 1)}%")
             peng3.metric(label = "Pengawasan Resiko Menengah Tinggi", value = f"{pengawasan_mt:,}", delta =f"{round(pengawasan_mt_perc, 1)}%")
             peng4.metric(label = "Pengawasan Resiko Tinggi", value = f"{pengawasan_t:,}", delta =f"{round(pengawasan_t_perc, 1)}%")
-        else : 
-            st.warning(f"No data available for this service point yet")
         
             st.markdown("---")
 
@@ -487,6 +484,10 @@ with st.spinner('Updating Report .... ') :
             ju1.plotly_chart(fig_ju, use_container_width = True)
 
             st.markwon("---")
+        
+        else : 
+            st.warning(f"No data available for this service point yet")
+        
 
 
 
