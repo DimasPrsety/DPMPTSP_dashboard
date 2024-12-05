@@ -474,7 +474,7 @@ with st.spinner('Updating Report .... ') :
             values_ju = [
                 filtered_data_inv['Usaha Besar'].sum()
                 , filtered_data_inv['Usaha Menengah'].sum()
-                , filtered_data_inv['Usaha Kecil'].sum()s
+                , filtered_data_inv['Usaha Kecil'].sum()
                 , filtered_data_inv['Usaha Mikro'].sum()
             ]
             labels_ju = ['Usaha Besar', 'Usaha Menengah', 'Usaha Kecil', 'Usaha Mikro']
