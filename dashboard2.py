@@ -475,15 +475,53 @@ with st.spinner('Updating Report .... ') :
                 , filtered_data_inv['Usaha Mikro'].sum()
             ]
             labels_ju = ['Usaha Besar', 'Usaha Menengah', 'Usaha Kecil', 'Usaha Mikro']
-            fig_ju = go.Figure(data=[go.Pie(labels=labels_ju, values=values_ju, hole=.3, marker=dict(colors=['#264653']))])
 
-            st.subheader(f"Jumlah Usaha {sp}")
+            values_jp = [
+                filtered_data_inv['Badan Hukum Lainnya'].sum()
+                , filtered_data_inv['Badan Layanan Umum (BLU)'].sum()
+                , filtered_data_inv['Koperasi'].sum()
+                , filtered_data_inv['Lembaga dan Bentuk Lainnya'].sum()
+                , filtered_data_inv['Organisasi Lainnya'].sum()
+                , filtered_data_inv['Perorangan'].sum()
+                , filtered_data_inv['Persekutuan Firma (Fa / Venootschap Onder Firma)'].sum()
+                , filtered_data_inv['Persekutuan Perdata'].sum()
+                , filtered_data_inv['Perseroan Lainnya'].sum()
+                , filtered_data_inv['Perseroan Terbatas (PT)'].sum()
+                , filtered_data_inv['Perseroan Terbatas (PT) Perorangan'].sum()
+                , filtered_data_inv['Perusahaan Umum (Perum)'].sum()
+                , filtered_data_inv['Perusahaan Umum Daerah (Perumda)'].sum()
+                , filtered_data_inv['Yayasan'].sum()
+            ]
+            labels_jp = [
+                'Badan Hukum Lainnya'
+                , 'Badan Layanan Umum (BLU)'
+                , 'Koperasi'
+                , 'Lembaga dan Bentuk Lainnya'
+                , 'Organisasi Lainnya'
+                , 'Perorangan'
+                , 'Persekutuan Firma (Fa / Venootschap Onder Firma)'
+                , 'Persekutuan Perdata'
+                , 'Perseroan Lainnya'
+                , 'Perseroan Terbatas (PT)'
+                , 'Perseroan Terbatas (PT) Perorangan'
+                , 'Perusahaan Umum (Perum)'
+                , 'Perusahaan Umum Daerah (Perumda)'
+                , 'Yayasan'
+            ]
+
+            
+            # Pembuatan plotlynya terkait jumlah usaha dan jenis perusahaan
+            fig_ju = go.Figure(data=[go.Pie(labels=labels_ju, values=values_ju, hole=.3, marker=dict(colors=['#264653']))])
+            fig_jp = go.Figure(data=[go.Pie(labels=labels_jp, values=values_jp, hole=.3, marker=dict(colors=['#264653']))])
+
+            st.subheader(f"Jumlah Usaha dan Jenis Perusahaan {sp}")
 
             # Pembuatan element di streamlitnya 
             ju1, ju2 = st.columns((1,1))
             ju1.plotly_chart(fig_ju, use_container_width = True)
+            ju2.plotly_chart(fig_jp, use_container_width = True)
 
-            st.markwon("---")
+            st.markdown("---")
         
         else : 
             st.warning(f"No data available for this service point yet")
