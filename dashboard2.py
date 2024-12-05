@@ -514,6 +514,9 @@ with st.spinner('Updating Report .... ') :
             fig_ju = go.Figure(data=[go.Pie(labels=labels_ju, values=values_ju, hole=.3, marker=dict(colors=['#264653']))])
             fig_jp = go.Figure(data=[go.Pie(labels=labels_jp, values=values_jp, hole=.3, marker=dict(colors=['#264653']))])
 
+            fig_ju.update_layout(title = "Berdasarkan Jumlah Usaha", title_x = 0.5)
+            fig_jp.update_layout(title = "Berdasarkan Jenis Perusahaan", title_x = 0.5)
+
             st.subheader(f"Jumlah Usaha dan Jenis Perusahaan {sp}")
 
             # Pembuatan element di streamlitnya 
