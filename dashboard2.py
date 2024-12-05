@@ -27,8 +27,10 @@ with st.spinner('Updating Report .... ') :
         level = 'kecamatan' 
     elif sp.startswith('Kantor Lurah') : 
         level = 'kelurahan'
-    else :
+    elif sp.startswith('Kantor Walikota') or sp.startswith('Kantor Bupati') :
         level = 'kota / kabupaten'
+    else :
+        level = 'Dinas'
 
  # Add tabs
     tab1, tab2 = st.tabs(["Izin Usaha", "Investasi & Pengawasan"])
@@ -50,15 +52,17 @@ with st.spinner('Updating Report .... ') :
             ditolak_perc = (ditolak_dibatalkan / total_izin) * 100
             masih_perc = (masih_diproses / total_izin) * 100
 
-            # Define layout using column in streamlit
-            m1, m2, m3 = st.columns((1, 1, 1))
-            m1.metric(label="Total Izin yang diajukan", value=total_izin)
-            m2.metric(label="Selesai diproses", value=selesai_diproses, delta=f"{round(selesai_perc, 1)}%")
-            m3.metric(label="Masih diproses", value=masih_diproses, delta=f"{round(masih_perc, 1)}%")
+            # Total Izin yang diajukan, dan status izin lainnya
+            m1, m2, m3= st.columns((1, 1, 1))
+            m1.write('')
+            m2.metric(label="Total Izin yang diajukan", value=total_izin)
+            m2.caption(f"**Rata-rata izin per {level.capitalize()}** yaitu **{average_izin}**")
+            m3.write('')
 
-            c1, c2 = st.columns((1, 1))
-            c1.metric(label="Ditolak & dibatalkan", value=ditolak_dibatalkan, delta=f"{round(ditolak_perc, 1)}%")
-            c2.metric(label="Rata-rata izin per " + level.capitalize(), value=f"{average_izin:.1f}")
+            c1, c2, c3 = st.columns((1, 1, 1))
+            c1.metric(label="Selesai diproses", value=selesai_diproses, delta=f"{round(selesai_perc, 1)}%")
+            c2.metric(label="Masih diproses", value=masih_diproses, delta=f"{round(masih_perc, 1)}%")
+            c3.metric(label="Ditolak & dibatalkan", value=ditolak_dibatalkan, delta=f"{round(ditolak_perc, 1)}%")
 
             st.markdown("---")
 
@@ -432,27 +436,59 @@ with st.spinner('Updating Report .... ') :
         cluster_investasi_df = pd.read_excel('data/ct_investasi_dimas.xlsx', sheet_name='Cluster')
         filtered_data_invc = cluster_investasi_df[cluster_investasi_df['service_point'] == sp]
 
-
-        if not filtered_data_inv.empty:
+        if not filtered_data_inv.empty : 
             total_investasi = filtered_data_inv['Jumlah_Investasi'].iloc[0]
             pengawasan_r = filtered_data_inv['Rendah'].iloc[0]
             pengawasan_mr = filtered_data_inv['Menengah Rendah'].iloc[0]
             pengawasan_mt = filtered_data_inv['Menengah Tinggi'].iloc[0]
             pengawasan_t = filtered_data_inv['Tinggi'].iloc[0]
+            total_pengawasan = pengawasan_r + pengawasan_mr + pengawasan_mt + pengawasan_t
+
+            pengawasan_r_perc = (pengawasan_r / total_pengawasan) * 100
+            pengawasan_mr_perc = (pengawasan_mr / total_pengawasan) * 100
+            pengawasan_mt_perc = (pengawasan_mt / total_pengawasan) * 100
+            pengawasan_t_perc = (pengawasan_t / total_pengawasan) * 100
 
             # Define column untuk pengawasan dan investasi
             st.subheader(f"Monitoring Metrics for {sp}")
             inv1, inv2, inv3 = st.columns((1, 1, 1))
             inv1.write('')
-            inv2.metric(label = "Total Investasi", value = f"Rp {total_investasi:, .0f}")
-            inv2.write('')
+            inv2.metric(label = "Total Investasi", value = f"Rp {total_investasi:,.0f}")
+            inv2.caption(f'_dengan rata-rata investasi sekitar **Rp {total_investasi/1000000000:,.0f} bio**_')
+            inv3.write('')
+
+            st.divider()
             
             peng1, peng2, peng3, peng4 = st.columns((1, 1, 1, 1))
-            peng1.metric(label = "Pengawasan Resiko Rendah", value = f"{pengawasan_r}")
-            peng2.metric(label = "Pengawasan Resiko Menengah Rendah", value = f"{pengawasan_mr}")
-            peng3.metric(label = "Pengawasan Resiko Menengah Tinggi", value = f"{pengawasan_mt}")
-            peng4.metric(label = "Pengawasan Resiko Tinggi", value = f"{pengawasan_t}")
+            peng1.metric(label = "Pengawasan Resiko Rendah", value = f"{pengawasan_r:,}", delta =f"{round(pengawasan_r_perc, 1)}%")
+            peng2.metric(label = "Pengawasan Resiko Menengah Rendah", value = f"{pengawasan_mr:,}", delta =f"{round(pengawasan_mr_perc, 1)}%")
+            peng3.metric(label = "Pengawasan Resiko Menengah Tinggi", value = f"{pengawasan_mt:,}", delta =f"{round(pengawasan_mt_perc, 1)}%")
+            peng4.metric(label = "Pengawasan Resiko Tinggi", value = f"{pengawasan_t:,}", delta =f"{round(pengawasan_t_perc, 1)}%")
+        else : 
+            st.warning(f"No data available for this service point yet")
+        
             st.markdown("---")
+
+            # Jumlah Usaha yang ada di daerah tsb
+            # Persiapan variabelnya dulu
+            values_ju = [
+                filtered_data_inv['Usaha Besar'].sum()
+                , filtered_data_inv['Usaha Menengah'].sum()
+                , filtered_data_inv['Usaha Kecil'].sum()s
+                , filtered_data_inv['Usaha Mikro'].sum()
+            ]
+            labels_ju = ['Usaha Besar', 'Usaha Menengah', 'Usaha Kecil', 'Usaha Mikro']
+            fig_ju = go.Figure(data=[go.Pie(labels=labels_ju, values=values_ju, hole=.3, marker=dict(colors=['#264653']))])
+
+            st.subheader(f"Jumlah Usaha {sp}")
+
+            # Pembuatan element di streamlitnya 
+            ju1, ju2 = st.columns((1,1))
+            ju1.plotly_chart(fig_ju, use_container_width = True)
+
+            st.markwon("---")
+
+
 
             
 
